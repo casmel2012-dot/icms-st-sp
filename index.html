@@ -291,7 +291,7 @@ td.obs-col{color:var(--text2);font-size:12px;max-width:200px}
               <option value="">Todos</option>
               <option value="COM ST">✅ Com ST</option>
               <option value="FORA DA ST">❌ Fora da ST</option>
-              <option value="SAIRA DA ST">⚠️ Sairá da ST</option>
+    
               <option value="VERIFICAR">⚠️ Verificar</option>
             </select>
           </div>
@@ -329,7 +329,7 @@ td.obs-col{color:var(--text2);font-size:12px;max-width:200px}
         <button class="filter-btn active" onclick="filtrarGeral('',this)">Todos</button>
         <button class="filter-btn" onclick="filtrarGeral('COM ST',this)" style="border-color:#22c55e;color:#166534">✅ Com ST</button>
         <button class="filter-btn" onclick="filtrarGeral('FORA DA ST',this)" style="border-color:#ef4444;color:#991b1b">❌ Fora da ST</button>
-        <button class="filter-btn" onclick="filtrarGeral('SAIRA',this)" style="border-color:#eab308;color:#854d0e">⚠️ Sairá / Verificar</button>
+        <button class="filter-btn" onclick="filtrarGeral('VERIFICAR',this)" style="border-color:#3b82f6;color:#1e40af">⚠️ Verificar</button>
       </div>
       <div id="geralArea">
         <div class="empty-state"><div class="spinner"></div><strong>Carregando...</strong></div>
@@ -444,7 +444,7 @@ td.obs-col{color:var(--text2);font-size:12px;max-width:200px}
         <div class="stat-card"><div class="stat-label">Total de NCMs</div><div class="stat-num" id="sTotal" style="color:var(--accent)">—</div><div class="stat-sub">na base</div></div>
         <div class="stat-card"><div class="stat-label">Com ST</div><div class="stat-num" id="sComST" style="color:#16a34a">—</div><div class="stat-sub">tributados na fonte</div></div>
         <div class="stat-card"><div class="stat-label">Fora da ST</div><div class="stat-num" id="sForaST" style="color:#dc2626">—</div><div class="stat-sub">excluídos até jul/26</div></div>
-        <div class="stat-card"><div class="stat-label">Sairão em out/26</div><div class="stat-num" id="sSairao" style="color:#d97706">—</div><div class="stat-sub">SRE 34/2026</div></div>
+        <div class="stat-card"><div class="stat-label">Excluídos out/26</div><div class="stat-num" id="sSairao" style="color:#d97706">—</div><div class="stat-sub">SRE 34/2026</div></div>
       </div>
 
       <div class="info-grid">
@@ -518,7 +518,7 @@ let BASE = [
   {ncm:'2008',desc:'Frutas em conserva, amendoim torrado',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
   {ncm:'2103',desc:'Preparacoes para molhos (ketchup)',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
   {ncm:'2104',desc:'Preparacoes para caldos e sopas',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
-  {ncm:'2105',desc:'Sorvetes e preparados para sorvete',seg:'Sorvetes',anexo:'IV',status:'SAIRA DA ST',vig:'01/07/2026',obs:'Excluido SRE 09/2026'},
+  {ncm:'2105',desc:'Sorvetes e preparados para sorvete',seg:'Sorvetes',anexo:'IV',status:'FORA DA ST',vig:'01/07/2026',obs:'Excluido SRE 09/2026'},
   {ncm:'2201',desc:'Aguas minerais e gasosas',seg:'Bebidas nao alcoolicas',anexo:'III/XIX',status:'COM ST',vig:'--',obs:'Verificar embalagem e CEST'},
   {ncm:'2202',desc:'Refrigerantes, isotonicas, energeticos',seg:'Bebidas nao alcoolicas',anexo:'III',status:'COM ST',vig:'--',obs:'ST mantida'},
   {ncm:'2203',desc:'Cerveja de malte',seg:'Cerveja e chope',anexo:'III',status:'COM ST',vig:'--',obs:'ST mantida'},
@@ -534,10 +534,10 @@ let BASE = [
   {ncm:'3003',desc:'Medicamentos nao em doses',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
   {ncm:'3004',desc:'Medicamentos em doses (humano/vet.)',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
   {ncm:'3006',desc:'Produtos farmaceuticos diversos',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
-  {ncm:'3208',desc:'Tintas e vernizes - base sintetica',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'3209',desc:'Tintas e vernizes - base acrilica',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'3210',desc:'Outras tintas e vernizes',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'3212',desc:'Pigmentos e tintas em po',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3208',desc:'Tintas e vernizes - base sintetica',seg:'Tintas e vernizes',anexo:'VIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3209',desc:'Tintas e vernizes - base acrilica',seg:'Tintas e vernizes',anexo:'VIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3210',desc:'Outras tintas e vernizes',seg:'Tintas e vernizes',anexo:'VIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3212',desc:'Pigmentos e tintas em po',seg:'Tintas e vernizes',anexo:'VIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'3301',desc:'Oleos essenciais',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
   {ncm:'3303',desc:'Perfumes e aguas de colonia',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
   {ncm:'3304',desc:'Produtos de beleza e maquiagem',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
@@ -547,10 +547,10 @@ let BASE = [
   {ncm:'3401',desc:'Sabaoes e sabonetes',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
   {ncm:'3917',desc:'Tubos e acessorios de plastico (construcao)',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'Novos MVA 2026-2028'},
   {ncm:'3924',desc:'Artefatos de mesa/cozinha de plastico',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
-  {ncm:'4011',desc:'Pneumaticos novos de borracha',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'4012',desc:'Pneumaticos recauchutados',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'4013',desc:'Camaras de ar de borracha',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'4016',desc:'Obras de borracha vulcanizada (veiculos)',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4011',desc:'Pneumaticos novos de borracha',seg:'Pneumaticos',anexo:'VII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4012',desc:'Pneumaticos recauchutados',seg:'Pneumaticos',anexo:'VII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4013',desc:'Camaras de ar de borracha',seg:'Pneumaticos',anexo:'VII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4016',desc:'Obras de borracha vulcanizada (veiculos)',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'6904',desc:'Tijolos de construcao de ceramica',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
   {ncm:'6907',desc:'Ladrilhos e placas de ceramica',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
   {ncm:'6911',desc:'Artefatos de mesa/cozinha de porcelana',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
@@ -562,27 +562,27 @@ let BASE = [
   {ncm:'7318',desc:'Parafusos e porcas de ferro/aco',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
   {ncm:'7323',desc:'Artefatos domesticos de ferro/aco',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
   {ncm:'7615',desc:'Artefatos domesticos de aluminio',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
-  {ncm:'8201',desc:'Ferramentas manuais de agricultura',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8202',desc:'Serras manuais e laminas de serra',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8203',desc:'Limas, formoes, alicates, chaves de fenda',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8204',desc:'Chaves de porcas manuais',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8205',desc:'Ferramentas manuais diversas',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8207',desc:'Ferramentas intercambiaveis para maquinas',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8301',desc:'Fechaduras e cadeados para veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8201',desc:'Ferramentas manuais de agricultura',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8202',desc:'Serras manuais e laminas de serra',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8203',desc:'Limas, formoes, alicates, chaves de fenda',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8204',desc:'Chaves de porcas manuais',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8205',desc:'Ferramentas manuais diversas',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8207',desc:'Ferramentas intercambiaveis para maquinas',seg:'Ferramentas',anexo:'XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8301',desc:'Fechaduras e cadeados para veiculos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'8302',desc:'Guarnicoes e ferragens para construcao',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
-  {ncm:'8413',desc:'Bombas para liquidos - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8413',desc:'Bombas para liquidos - veiculos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'8415',desc:'Aparelhos de ar condicionado',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'Verificar SRE 19/2026'},
-  {ncm:'8418',desc:'Refrigeradores e congeladores',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Itens 2-10 e 15 excluidos SRE 34/2026'},
-  {ncm:'8421',desc:'Filtros para lubrificantes/combustiveis',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8422',desc:'Maquinas de lavar louca domesticas',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8418',desc:'Refrigeradores e congeladores',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'FORA DA ST',vig:'01/10/2026',obs:'Itens 2-10 e 15 excluidos SRE 34/2026'},
+  {ncm:'8421',desc:'Filtros para lubrificantes/combustiveis',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8422',desc:'Maquinas de lavar louca domesticas',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'8450',desc:'Maquinas de lavar roupa',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'ST mantida'},
   {ncm:'8471',desc:'Computadores e unidades',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'VERIFICAR',vig:'2026',obs:'Parte dos itens excluida SRE 19/2026'},
-  {ncm:'8482',desc:'Rolamentos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8483',desc:'Arvores de transmissao',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8482',desc:'Rolamentos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8483',desc:'Arvores de transmissao',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'8504',desc:'Reatores para lampadas',seg:'Lampadas',anexo:'XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
-  {ncm:'8507',desc:'Acumuladores eletricos de chumbo (baterias)',seg:'Baterias automotivas',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026 c/c SRE 10/2026'},
-  {ncm:'8511',desc:'Aparelhos eletricos de ignicao - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
-  {ncm:'8512',desc:'Aparelhos eletricos de sinalizacao - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8507',desc:'Acumuladores eletricos de chumbo (baterias)',seg:'Baterias automotivas',anexo:'XXII',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026 c/c SRE 10/2026'},
+  {ncm:'8511',desc:'Aparelhos eletricos de ignicao - veiculos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8512',desc:'Aparelhos eletricos de sinalizacao - veiculos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
   {ncm:'8516',desc:'Aquecedores eletricos, ferro de passar',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'Verificar SRE 19/2026'},
   {ncm:'8517',desc:'Telefones e smartphones',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'VERIFICAR',vig:'2026',obs:'Parte excluida SRE 19/2026'},
   {ncm:'8539',desc:'Lampadas e tubos eletricos',seg:'Lampadas',anexo:'XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025 e SRE 82/2025'},
@@ -598,19 +598,19 @@ let GERAL = [
   {seg:'Sorvetes e preparados',anexo:'Anexo IV',status:'FORA DA ST',vig:'01/07/2026',obs:'Exclusao total – SRE 09/2026',base:'Port. SRE 09/26'},
   {seg:'Veiculos automotores',anexo:'Anexo V',status:'COM ST',vig:'--',obs:'ST mantida',base:'Art. 299 RICMS/SP'},
   {seg:'Veiculos duas e tres rodas',anexo:'Anexo VI',status:'COM ST',vig:'--',obs:'Inclui veiculos eletricos desde 01/12/2025',base:'Art. 301; SRE 85/25'},
-  {seg:'Pneumaticos, camaras de ar e protetores',anexo:'Anexo VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
-  {seg:'Tintas e vernizes',anexo:'Anexo VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Pneumaticos, camaras de ar e protetores',anexo:'Anexo VII',status:'FORA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Tintas e vernizes',anexo:'Anexo VIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
   {seg:'Medicamentos e farmacos',anexo:'Anexo IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
   {seg:'Bebidas alcoolicas (exceto cerveja/chope)',anexo:'Anexo X',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
   {seg:'Perfumaria, higiene pessoal e dermocos.',anexo:'Anexo XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Exclusao total – SRE 94/2025',base:'Port. SRE 94/25'},
   {seg:'Bebidas nao alcoolicas e frias (PMPF)',anexo:'Anexos XIII/XIX',status:'COM ST',vig:'--',obs:'PMPF atualizados pela SRE 89/25',base:'Port. SRE 89/25'},
-  {seg:'Autopecas (exceto vidros automotivos)',anexo:'Anexo XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Autopecas (exceto vidros automotivos)',anexo:'Anexo XIV',status:'FORA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
   {seg:'Lampadas, reatores e starters',anexo:'Anexo XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 82/2025 e SRE 64/2025',base:'Port. SRE 82 e 64/25'},
   {seg:'Produtos alimenticios (remanescentes)',anexo:'Anexo XVI',status:'COM ST',vig:'--',obs:'Massas, biscoitos, chocolates permanecem; cafe, acucar, oleos excluidos',base:'Art. 313-W; SRE 64/25'},
   {seg:'Materiais de construcao e congeneres',anexo:'Anexo XVII',status:'COM ST',vig:'--',obs:'Novos MVA 2026-2028; exclusoes pontuais SRE 5 e 19/2026',base:'Art. 313-Z; SRE 88/25'},
-  {seg:'Ferramentas',anexo:'Anexo XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Ferramentas',anexo:'Anexo XVIII',status:'FORA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
   {seg:'Artefatos de uso domestico',anexo:'Anexo XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
-  {seg:'Papelaria e artigos de papelaria',anexo:'Anexo XXI',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total materiais eletricos – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Papelaria e artigos de papelaria',anexo:'Anexo XXI',status:'FORA DA ST',vig:'01/10/2026',obs:'Exclusao total materiais eletricos – SRE 34/2026',base:'Port. SRE 34/2026'},
   {seg:'Eletronicos, eletroeletronicos e eletrodom.',anexo:'Anexo XXII',status:'VERIFICAR',vig:'2026',obs:'Exclusoes pontuais SRE 19/2026 e SRE 34/2026; checar cada item',base:'Port. SRE 19 e 34/2026'},
 ];
 
@@ -706,7 +706,7 @@ function inicializar() {
 }
 
 function popularSegmentos() {
-  const segs = [...new Set(BASE.map(r => r.seg))].sort();
+  const segs = [...new Set(BASE.map(r => r.seg).filter(s => s && s.trim()))].sort();
   const sel = document.getElementById('filtroSeg');
   sel.innerHTML = '<option value="">Todos</option>';
   segs.forEach(s => {
@@ -846,7 +846,7 @@ function calcularStats() {
   document.getElementById('sTotal').textContent   = BASE.length;
   document.getElementById('sComST').textContent   = BASE.filter(r => r.status === 'COM ST').length;
   document.getElementById('sForaST').textContent  = BASE.filter(r => r.status === 'FORA DA ST').length;
-  document.getElementById('sSairao').textContent  = BASE.filter(r => r.status === 'SAIRA DA ST' && r.vig === '01/10/2026').length;
+  document.getElementById('sSairao').textContent  = BASE.filter(r => r.status === 'FORA DA ST' && r.vig === '01/10/2026').length;
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -860,7 +860,6 @@ function badge(status) {
   const s = String(status).toUpperCase();
   if (s === 'COM ST')       return '<span class="badge badge-green">✅ Com ST</span>';
   if (s === 'FORA DA ST')   return '<span class="badge badge-red">❌ Fora da ST</span>';
-  if (s === 'SAIRA DA ST')  return '<span class="badge badge-yellow">⚠️ Sairá</span>';
   if (s === 'VERIFICAR')    return '<span class="badge badge-blue">⚠️ Verificar</span>';
   return `<span class="badge badge-gray">${esc(status)}</span>`;
 }
