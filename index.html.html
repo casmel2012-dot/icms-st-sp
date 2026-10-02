@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICMS-ST SP 2026 — Consulta</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>📋</text></svg>">
+<style>
+/* ── Base ── */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f6fb;
+  --surface:#ffffff;
+  --border:#e2e8f0;
+  --text:#0f172a;
+  --text2:#64748b;
+  --text3:#94a3b8;
+  --accent:#1e40af;
+  --accent-light:#dbeafe;
+  --green:#166534;--green-bg:#dcfce7;
+  --red:#991b1b;  --red-bg:#fee2e2;
+  --yellow:#854d0e;--yellow-bg:#fef9c3;
+  --blue:#1e40af; --blue-bg:#dbeafe;
+  --radius:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ── Login ── */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1e3a5f 0%,#1e40af 100%);
+  padding:20px;
+}
+.login-box{
+  background:#fff;border-radius:16px;padding:40px 36px;
+  width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+.login-logo{
+  text-align:center;margin-bottom:28px;
+}
+.login-logo .badge{
+  display:inline-block;background:#1e40af;color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:.08em;
+  padding:4px 12px;border-radius:20px;margin-bottom:12px;
+}
+.login-logo h1{font-size:22px;font-weight:700;color:#0f172a;margin-bottom:4px}
+.login-logo p{font-size:13px;color:#64748b}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:12px;font-weight:600;color:#475569;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.login-field input{
+  width:100%;border:1.5px solid #e2e8f0;border-radius:8px;
+  padding:11px 14px;font-size:15px;outline:none;transition:border .15s;
+  font-family:inherit;
+}
+.login-field input:focus{border-color:#1e40af}
+.login-btn{
+  width:100%;background:#1e40af;color:#fff;border:none;
+  border-radius:8px;padding:12px;font-size:15px;font-weight:600;
+  cursor:pointer;transition:background .15s;font-family:inherit;
+}
+.login-btn:hover{background:#1d3799}
+.login-error{
+  display:none;color:#dc2626;font-size:13px;
+  text-align:center;margin-top:10px;
+}
+.login-footer{text-align:center;font-size:12px;color:#94a3b8;margin-top:24px}
+
+/* ── App ── */
+#app{display:none;min-height:100vh}
+
+header{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:0 24px;height:56px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;
+  box-shadow:var(--shadow);
+}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-badge{background:#1e40af;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.05em}
+.header-title{font-size:15px;font-weight:700;color:#0f172a}
+.header-right{display:flex;align-items:center;gap:12px}
+.update-info{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.dot-live{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.btn-sair{background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--text2);font-family:inherit}
+.btn-sair:hover{background:var(--bg)}
+
+/* ── Nav tabs ── */
+.nav-tabs{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0}
+.nav-tab{
+  padding:14px 18px;font-size:13px;font-weight:500;cursor:pointer;
+  color:var(--text2);border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;
+  font-family:inherit;
+}
+.nav-tab:hover{color:var(--accent)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── Main ── */
+main{padding:24px;max-width:1200px;margin:0 auto}
+.page{display:none}
+.page.active{display:block}
+
+/* ── Alerta ── */
+.alerta{
+  background:#fff7ed;border:1px solid #fed7aa;
+  border-left:4px solid #f97316;border-radius:8px;
+  padding:12px 16px;margin-bottom:20px;
+  font-size:13px;color:#9a3412;line-height:1.55;
+}
+.alerta strong{font-weight:600}
+
+/* ── Search card ── */
+.search-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px 24px;
+  margin-bottom:20px;box-shadow:var(--shadow);
+}
+.search-card h2{font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.search-row{display:grid;grid-template-columns:1fr 180px 220px auto;gap:10px;align-items:end}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select{
+  width:100%;border:1.5px solid var(--border);border-radius:8px;
+  padding:9px 12px;font-size:14px;outline:none;transition:border .15s;
+  background:#fff;font-family:inherit;color:var(--text);
+}
+.field input:focus,.field select:focus{border-color:var(--accent)}
+.btns{display:flex;gap:8px}
+.btn{padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-primary{background:#1e40af;color:#fff}
+.btn-primary:hover{background:#1d3799}
+.btn-ghost{background:#fff;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-print{background:#fff;color:#475569;border:1px solid var(--border);font-size:12px}
+.btn-print:hover{background:var(--bg)}
+
+/* ── Resultados ── */
+.results-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.results-count{font-size:13px;color:var(--text2)}
+.results-count strong{color:var(--accent)}
+
+/* ── Tabela ── */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+thead th{background:#f8faff;color:var(--text2);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{border-bottom:1px solid #f8faff;transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#f8faff}
+td{padding:11px 14px;vertical-align:middle;line-height:1.4}
+td.ncm-col{font-family:monospace;font-weight:700;font-size:14px;color:var(--accent);white-space:nowrap}
+td.desc-col{font-weight:500;max-width:280px}
+td.obs-col{color:var(--text2);font-size:12px;max-width:200px}
+
+/* ── Badges ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-yellow{background:var(--yellow-bg);color:var(--yellow)}
+.badge-blue{background:var(--blue-bg);color:var(--blue)}
+.badge-gray{background:#f1f5f9;color:#475569}
+
+/* ── Estado vazio ── */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-state .icon{font-size:40px;margin-bottom:12px}
+.empty-state strong{display:block;font-size:15px;color:var(--text2);margin-bottom:4px}
+.empty-state p{font-size:13px}
+.spinner{width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Cards segmento ── */
+.seg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.seg-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.seg-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.seg-nome{font-weight:600;font-size:13px;line-height:1.3}
+.seg-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.seg-obs{font-size:12px;color:var(--text2);line-height:1.4;border-top:1px solid #f0f4f8;padding-top:8px;margin-top:4px}
+
+/* ── Painel interno ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.stat-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat-num{font-size:28px;font-weight:700;line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.info-card h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.info-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.info-list li{font-size:12px;color:#374151;display:flex;align-items:baseline;gap:6px;line-height:1.45}
+.info-list li::before{content:"·";color:var(--accent);font-weight:900;flex-shrink:0}
+.info-list a{color:var(--accent);text-decoration:none}
+.info-list a:hover{text-decoration:underline}
+
+/* ── PMPF ── */
+.pmpf-section{margin-bottom:28px}
+.pmpf-section h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+.grupos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.grupo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.grupo-card .ico{font-size:20px;margin-bottom:6px}
+.grupo-card h4{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.grupo-card p{font-size:12px;color:var(--text2);line-height:1.5}
+.grupo-card .ncm-tag{display:inline-block;background:var(--accent-light);color:var(--accent);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;margin-top:6px}
+
+/* ── Filtros visão geral ── */
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--text2);font-family:inherit;transition:all .15s}
+.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.filter-btn.active{border-color:var(--accent);background:var(--accent);color:#fff}
+
+/* ── Print ── */
+@media print{
+  header,.nav-tabs,.search-card .btns,.results-bar,.btn-print,#loginScreen{display:none!important}
+  .page{display:block!important}
+  body{background:#fff}
+}
+
+/* ── Responsive ── */
+@media(max-width:700px){
+  .search-row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .info-grid{grid-template-columns:1fr}
+  main{padding:14px}
+  header{padding:0 14px}
+  .nav-tabs{padding:0 14px;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="badge">SP · 2026</div>
+      <h1>ICMS-ST Consulta</h1>
+      <p>Sistema de consulta de Substituição Tributária</p>
+    </div>
+    <div class="login-field">
+      <label>Senha de acesso</label>
+      <input type="password" id="senhaInput" placeholder="Digite a senha..." onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="login-btn" onclick="login()">Entrar</button>
+    <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
+    <div class="login-footer">Atualizado · Julho/2026 · Base: Portaria CAT 68/2019</div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+
+  <header>
+    <div class="header-left">
+      <div class="header-badge">SP 2026</div>
+      <div class="header-title">ICMS-ST Consulta</div>
+    </div>
+    <div class="header-right">
+      <div class="update-info">
+        <div class="dot-live"></div>
+        <span id="updateInfo">Carregando...</span>
+      </div>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('consulta',this)">🔎 Consulta NCM</button>
+    <button class="nav-tab" onclick="showPage('visao',this)">📋 Visão Geral</button>
+    <button class="nav-tab" onclick="showPage('pmpf',this)">🍺 PMPF Bebidas</button>
+    <button class="nav-tab" onclick="showPage('interno',this)">🔒 Painel Interno</button>
+  </nav>
+
+  <main>
+
+    <!-- ══ CONSULTA NCM ══ -->
+    <div class="page active" id="page-consulta">
+
+      <div class="alerta">
+        <strong>⚠️ SRE 34/2026 (vigente 01/10/2026):</strong> Autopeças, pneumáticos, tintas, ferramentas, materiais elétricos e parte dos eletrodomésticos saem da ST. Inventário de estoque obrigatório em 30/09/2026.
+      </div>
+
+      <div class="search-card">
+        <h2>🔎 Busca por NCM ou descrição do produto</h2>
+        <div class="search-row">
+          <div class="field">
+            <label>NCM ou descrição</label>
+            <input type="text" id="termoBusca" placeholder="Ex: 3004 ou medicamento..." oninput="buscarLive()">
+          </div>
+          <div class="field">
+            <label>Status ST</label>
+            <select id="filtroStatus" onchange="buscarLive()">
+              <option value="">Todos</option>
+              <option value="COM ST">✅ Com ST</option>
+              <option value="FORA DA ST">❌ Fora da ST</option>
+              <option value="SAIRA DA ST">⚠️ Sairá da ST</option>
+              <option value="VERIFICAR">⚠️ Verificar</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Segmento</label>
+            <select id="filtroSeg" onchange="buscarLive()">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <div class="btns">
+            <button class="btn btn-ghost" onclick="limpar()">Limpar</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-bar">
+        <div class="results-count" id="resultsCount"></div>
+      </div>
+
+      <div id="resultArea">
+        <div class="empty-state">
+          <div class="icon">🔎</div>
+          <strong>Pronto para buscar</strong>
+          <p>Digite um NCM (ex: 3004) ou nome do produto acima</p>
+        </div>
+      </div>
+
+    </div><!-- /consulta -->
+
+
+    <!-- ══ VISÃO GERAL ══ -->
+    <div class="page" id="page-visao">
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filtrarGeral('',this)">Todos</button>
+        <button class="filter-btn" onclick="filtrarGeral('COM ST',this)" style="border-color:#22c55e;color:#166534">✅ Com ST</button>
+        <button class="filter-btn" onclick="filtrarGeral('FORA DA ST',this)" style="border-color:#ef4444;color:#991b1b">❌ Fora da ST</button>
+        <button class="filter-btn" onclick="filtrarGeral('SAIRA',this)" style="border-color:#eab308;color:#854d0e">⚠️ Sairá / Verificar</button>
+      </div>
+      <div id="geralArea">
+        <div class="empty-state"><div class="spinner"></div><strong>Carregando...</strong></div>
+      </div>
+    </div>
+
+
+    <!-- ══ PMPF BEBIDAS ══ -->
+    <div class="page" id="page-pmpf">
+      <div class="alerta">
+        <strong>⚠️ SRE 09/2026 (vigente 01/07/2026):</strong> Águas minerais em embalagens descartáveis (vidro, copo, jarra) saíram da ST. Garrafão de 10L e 20L permanece.
+      </div>
+
+      <div class="pmpf-section">
+        <h3>Grupos com PMPF — vigência 01/01/2026 a 30/06/2026</h3>
+        <div class="grupos-grid">
+          <div class="grupo-card">
+            <div class="ico">💧</div>
+            <h4>Água mineral e natural</h4>
+            <p>Saída parcial desde 01/07/2026. Garrafões 10L/20L permanecem na ST.</p>
+            <span class="ncm-tag">NCM 2201</span>
+          </div>
+          <div class="grupo-card">
+            <div class="ico">🥤</div>
+            <h4>Refrigerantes</h4>
+            <p>PMPF por marca, embalagem e volume. Xarope pré-mix (NCM 2106.90.10): IVA-ST 100%.</p>
+            <span class="ncm-tag">NCM 2202</span>
+          </div>
+          <div class="grupo-card">
+            <div class="ico">⚡</div>
+            <h4>Energéticos e hidroeletrolíticos</h4>
+            <p>PMPF por marca, embalagem e volume. Marcas não listadas: IVA-ST Anexo III.</p>
+            <span class="ncm-tag">NCM 2202.99</span>
+          </div>
+          <div class="grupo-card">
+            <div class="ico">🍺</div>
+            <h4>Cerveja e chope</h4>
+            <p>PMPF por marca. Novas marcas incluídas pela SRE 18/2026 (vigência 01/04/2026).</p>
+            <span class="ncm-tag">NCM 2203 / 2206</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pmpf-section">
+        <h3>IVA-ST — Água Mineral (sem PMPF específico)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Produto</th><th>Situação do remetente</th><th>Tipo / volume</th><th>IVA-ST</th></tr></thead>
+            <tbody>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Vidro ret. ou não, >300ml até 500ml</td><td><strong>250%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Garrafa plástica 1.500ml</td><td><strong>120%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Embalagem ≥ 5.000ml</td><td><strong>100%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Copo plástico ≤ 500ml</td><td><strong>140%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Vidro não retornável ≤ 300ml</td><td><strong>140%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Fabricante / importador / distribuidor</td><td>Demais casos (incl. gaseificada)</td><td><strong>140%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Varejista de estado não signatário</td><td>Plástico ou vidro ≤ 500ml</td><td><strong>58%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Varejista de estado não signatário</td><td>Plástico ou vidro 500ml a 2L</td><td><strong>32%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Varejista de estado não signatário</td><td>Embalagem ≥ 5.000ml</td><td><strong>32%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Varejista de estado não signatário</td><td>Copo plástico ≤ 300ml</td><td><strong>92%</strong></td></tr>
+              <tr><td>Água mineral</td><td>Varejista de estado não signatário</td><td>Demais casos</td><td><strong>40%</strong></td></tr>
+              <tr><td>Refrig. xarope/extrato</td><td>Qualquer remetente</td><td>NCM 2106.90.10 — pré-mix ou post-mix</td><td><strong>100%</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pmpf-section">
+        <h3>PMPF — Água Mineral Nacional (Anexo I — vigente até 30/06/2026)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tipo / Origem</th><th>Embalagem</th><th>Volume</th><th>PMPF</th></tr></thead>
+            <tbody id="pmpfTableBody">
+              <tr><td>Nacional – Mineral/Potável</td><td>Copo plástico</td><td>até 210ml</td><td><strong>R$ 1,54</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Copo plástico</td><td>211 a 310ml</td><td><strong>R$ 1,81</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Vidro descartável</td><td>até 310ml</td><td><strong>R$ 6,40</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Lata</td><td>até 360ml</td><td><strong>R$ 3,87</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Tetrapack</td><td>261 a 360ml</td><td><strong>R$ 6,19</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Tetrapack</td><td>361 a 650ml</td><td><strong>R$ 6,37</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>até 270ml</td><td><strong>R$ 1,16</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>271 a 450ml</td><td><strong>R$ 2,48</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>451 a 540ml</td><td><strong>R$ 2,42</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>541 a 810ml</td><td><strong>R$ 3,26</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>811 a 1.000ml</td><td><strong>R$ 3,29</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>1.001 a 1.450ml</td><td><strong>R$ 4,34</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>1.451 a 1.500ml</td><td><strong>R$ 3,26</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>1.751 a 2.000ml</td><td><strong>R$ 4,17</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>2.251 a 2.500ml</td><td><strong>R$ 8,15</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>2.751 a 3.000ml</td><td><strong>R$ 7,13</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Demais embalagens</td><td>3.001 a 5.000ml</td><td><strong>R$ 11,59</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Galão retornável</td><td>10 litros</td><td><strong>R$ 12,99</strong></td></tr>
+              <tr><td>Nacional – Mineral/Potável</td><td>Galão retornável</td><td>20 litros</td><td><strong>R$ 15,21</strong></td></tr>
+              <tr><td>Nacional – Adicionada de sais</td><td>Todas as embalagens</td><td>541 a 810ml</td><td><strong>R$ 5,46</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Plástico</td><td>261 a 360ml</td><td><strong>R$ 10,44</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Plástico</td><td>361 a 500ml</td><td><strong>R$ 13,35</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>até 260ml</td><td><strong>R$ 15,81</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>261 a 360ml</td><td><strong>R$ 14,13</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>361 a 500ml</td><td><strong>R$ 27,55</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>501 a 650ml</td><td><strong>R$ 18,39</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>651 a 790ml</td><td><strong>R$ 25,98</strong></td></tr>
+              <tr><td>Importada – Mineral/Potável</td><td>Vidro</td><td>791 a 1.000ml</td><td><strong>R$ 49,87</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-top:8px">Para refrigerantes, energéticos e cervejas, o PMPF é definido por marca/embalagem/volume nos Anexos II, III e IV da SRE 89/2025. Consulte o texto completo em <a href="https://legislacao.fazenda.sp.gov.br" target="_blank" style="color:var(--accent)">legislacao.fazenda.sp.gov.br</a></p>
+      </div>
+    </div>
+
+
+    <!-- ══ PAINEL INTERNO ══ -->
+    <div class="page" id="page-interno">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-label">Total de NCMs</div><div class="stat-num" id="sTotal" style="color:var(--accent)">—</div><div class="stat-sub">na base</div></div>
+        <div class="stat-card"><div class="stat-label">Com ST</div><div class="stat-num" id="sComST" style="color:#16a34a">—</div><div class="stat-sub">tributados na fonte</div></div>
+        <div class="stat-card"><div class="stat-label">Fora da ST</div><div class="stat-num" id="sForaST" style="color:#dc2626">—</div><div class="stat-sub">excluídos até jul/26</div></div>
+        <div class="stat-card"><div class="stat-label">Sairão em out/26</div><div class="stat-num" id="sSairao" style="color:#d97706">—</div><div class="stat-sub">SRE 34/2026</div></div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>📅 Cronologia de exclusões 2026</h3>
+          <ul class="info-list">
+            <li><strong>01/01/2026</strong> — Medicamentos, bebidas alcoólicas, lâmpadas, artefatos domésticos, vidros automotivos (SRE 64/2025)</li>
+            <li><strong>01/04/2026</strong> — Perfumaria, higiene pessoal e dermocosméticos (SRE 94/2025)</li>
+            <li><strong>01/07/2026</strong> — Sorvetes e preparados · Águas minerais em emb. descartáveis (SRE 09/2026)</li>
+            <li><strong>01/10/2026</strong> — Autopeças · Pneumáticos · Tintas · Ferramentas · Mat. elétricos · Baterias · Refrig./lava-louças (SRE 34/2026)</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>⚖️ Base legal — referências rápidas</h3>
+          <ul class="info-list">
+            <li>Portaria CAT 68/2019 — Regime de ST em SP (base)</li>
+            <li>SRE 64/2025 — Exclusões em massa (01/01/2026)</li>
+            <li>SRE 78/2025 — Novos IVA-ST Ferramentas</li>
+            <li>SRE 88/2025 — Novos MVA Construção 2026-2028</li>
+            <li>SRE 89/2025 — PMPF Bebidas Frias</li>
+            <li>SRE 94/2025 — Exclusão Perfumaria (01/04/2026)</li>
+            <li>SRE 09/2026 — Exclusão Sorvetes + Águas (01/07/2026)</li>
+            <li>SRE 34/2026 — Exclusão em massa (01/10/2026)</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>💡 Tratamento do estoque (excluídos da ST)</h3>
+          <ul class="info-list">
+            <li>Inventário no Bloco H da EFD ICMS/IPI na data de exclusão</li>
+            <li>Crédito de ICMS-ST em até 24 parcelas (CAT 28/2020)</li>
+            <li>Perfumaria/Higiene: crédito em 12 parcelas (SRE 07/2026)</li>
+            <li>Escrituração: Registros E110 e E111 da EFD</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🔗 Links úteis</h3>
+          <ul class="info-list">
+            <li><a href="https://legislacao.fazenda.sp.gov.br" target="_blank">SEFAZ-SP — Portaria CAT 68/2019 e alterações</a></li>
+            <li><a href="https://www.confaz.fazenda.gov.br" target="_blank">CONFAZ — Consulta CEST</a></li>
+            <li><a href="https://portalunico.siscomex.gov.br/classif/ncm" target="_blank">Portal Único — Consulta NCM</a></li>
+            <li><a href="https://docs.google.com/spreadsheets/d/1Fh4o2VGSq0jbB7qoPKIgl0Xf3vhH8Rc2dJPtIJKDpoM" target="_blank">Planilha base (Google Sheets)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+// CONFIG — altere a senha aqui
+// ══════════════════════════════════════════════════════════════════════
+const SENHA = 'stsp2026';
+const SHEET_ID = '1Fh4o2VGSq0jbB7qoPKIgl0Xf3vhH8Rc2dJPtIJKDpoM';
+
+// ══════════════════════════════════════════════════════════════════════
+// Base de dados embutida (sincronizada com a planilha)
+// Atualiza automaticamente ao carregar se a planilha estiver pública
+// ══════════════════════════════════════════════════════════════════════
+let BASE = [
+  {ncm:'0910',desc:'Cafe torrado, moido ou em graos',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'1507',desc:'Oleo de soja',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'1512',desc:'Oleo de girassol ou algodao',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'1517',desc:'Margarina e misturas de gorduras',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'1701',desc:'Acucar de cana ou beterraba',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'1806',desc:'Chocolate e preparacoes com cacau',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'1902',desc:'Massas alimenticias',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'1904',desc:'Produtos de cereais por insufla\u00e7\u00e3o',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'1905',desc:'Biscoitos, bolachas, paes',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'2008',desc:'Frutas em conserva, amendoim torrado',seg:'Produtos Alimenticios',anexo:'XVI',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'2103',desc:'Preparacoes para molhos (ketchup)',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'2104',desc:'Preparacoes para caldos e sopas',seg:'Produtos Alimenticios',anexo:'XVI',status:'COM ST',vig:'--',obs:'Permanece na ST'},
+  {ncm:'2105',desc:'Sorvetes e preparados para sorvete',seg:'Sorvetes',anexo:'IV',status:'SAIRA DA ST',vig:'01/07/2026',obs:'Excluido SRE 09/2026'},
+  {ncm:'2201',desc:'Aguas minerais e gasosas',seg:'Bebidas nao alcoolicas',anexo:'III/XIX',status:'COM ST',vig:'--',obs:'Verificar embalagem e CEST'},
+  {ncm:'2202',desc:'Refrigerantes, isotonicas, energeticos',seg:'Bebidas nao alcoolicas',anexo:'III',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2203',desc:'Cerveja de malte',seg:'Cerveja e chope',anexo:'III',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2204',desc:'Vinhos de uvas frescas',seg:'Bebidas alcoolicas',anexo:'X',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'2205',desc:'Vermutes e outros vinhos',seg:'Bebidas alcoolicas',anexo:'X',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'2206',desc:'Chope e outras bebidas fermentadas',seg:'Cerveja e chope',anexo:'III',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2207',desc:'Alcool etilico nao desnaturado',seg:'Bebidas alcoolicas',anexo:'X',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'2208',desc:'Aguardente, uisque, rum, vodca, licores',seg:'Bebidas alcoolicas',anexo:'X',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'2401',desc:'Fumo nao manufaturado',seg:'Fumo manufaturado',anexo:'I',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2402',desc:'Charutos e cigarros',seg:'Fumo manufaturado',anexo:'I',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2403',desc:'Outros produtos do fumo',seg:'Fumo manufaturado',anexo:'I',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'2523',desc:'Cimento Portland e outros cimentos',seg:'Cimento',anexo:'II',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'3003',desc:'Medicamentos nao em doses',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'3004',desc:'Medicamentos em doses (humano/vet.)',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'3006',desc:'Produtos farmaceuticos diversos',seg:'Medicamentos',anexo:'IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'3208',desc:'Tintas e vernizes - base sintetica',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3209',desc:'Tintas e vernizes - base acrilica',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3210',desc:'Outras tintas e vernizes',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3212',desc:'Pigmentos e tintas em po',seg:'Tintas e vernizes',anexo:'VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'3301',desc:'Oleos essenciais',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3303',desc:'Perfumes e aguas de colonia',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3304',desc:'Produtos de beleza e maquiagem',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3305',desc:'Preparacoes para cabelo',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3306',desc:'Preparacoes para higiene bucal',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3307',desc:'Preparacoes para barba e desodorantes',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3401',desc:'Sabaoes e sabonetes',seg:'Perfumaria e Higiene',anexo:'XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Excluido SRE 94/2025'},
+  {ncm:'3917',desc:'Tubos e acessorios de plastico (construcao)',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'Novos MVA 2026-2028'},
+  {ncm:'3924',desc:'Artefatos de mesa/cozinha de plastico',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'4011',desc:'Pneumaticos novos de borracha',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4012',desc:'Pneumaticos recauchutados',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4013',desc:'Camaras de ar de borracha',seg:'Pneumaticos',anexo:'VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'4016',desc:'Obras de borracha vulcanizada (veiculos)',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'6904',desc:'Tijolos de construcao de ceramica',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'6907',desc:'Ladrilhos e placas de ceramica',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'6911',desc:'Artefatos de mesa/cozinha de porcelana',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'6912',desc:'Artefatos de mesa/cozinha de ceramica',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'7005',desc:'Vidro flotado (construcao)',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'7007',desc:'Vidros de seguranca automotivos',seg:'Autopecas',anexo:'XIV',status:'FORA DA ST',vig:'01/01/2026',obs:'Item 15 excluido SRE 64/2025'},
+  {ncm:'7013',desc:'Objetos de vidro para mesa e cozinha',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'7308',desc:'Construcoes e partes de ferro/aco',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'7318',desc:'Parafusos e porcas de ferro/aco',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'7323',desc:'Artefatos domesticos de ferro/aco',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'7615',desc:'Artefatos domesticos de aluminio',seg:'Artef. Domesticos',anexo:'XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'8201',desc:'Ferramentas manuais de agricultura',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8202',desc:'Serras manuais e laminas de serra',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8203',desc:'Limas, formoes, alicates, chaves de fenda',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8204',desc:'Chaves de porcas manuais',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8205',desc:'Ferramentas manuais diversas',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8207',desc:'Ferramentas intercambiaveis para maquinas',seg:'Ferramentas',anexo:'XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8301',desc:'Fechaduras e cadeados para veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8302',desc:'Guarnicoes e ferragens para construcao',seg:'Mat. de Construcao',anexo:'XVII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'8413',desc:'Bombas para liquidos - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8415',desc:'Aparelhos de ar condicionado',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'Verificar SRE 19/2026'},
+  {ncm:'8418',desc:'Refrigeradores e congeladores',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Itens 2-10 e 15 excluidos SRE 34/2026'},
+  {ncm:'8421',desc:'Filtros para lubrificantes/combustiveis',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8422',desc:'Maquinas de lavar louca domesticas',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8450',desc:'Maquinas de lavar roupa',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'8471',desc:'Computadores e unidades',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'VERIFICAR',vig:'2026',obs:'Parte dos itens excluida SRE 19/2026'},
+  {ncm:'8482',desc:'Rolamentos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8483',desc:'Arvores de transmissao',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8504',desc:'Reatores para lampadas',seg:'Lampadas',anexo:'XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025'},
+  {ncm:'8507',desc:'Acumuladores eletricos de chumbo (baterias)',seg:'Baterias automotivas',anexo:'XXII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026 c/c SRE 10/2026'},
+  {ncm:'8511',desc:'Aparelhos eletricos de ignicao - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8512',desc:'Aparelhos eletricos de sinalizacao - veiculos',seg:'Autopecas',anexo:'XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Excluido SRE 34/2026'},
+  {ncm:'8516',desc:'Aquecedores eletricos, ferro de passar',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'COM ST',vig:'--',obs:'Verificar SRE 19/2026'},
+  {ncm:'8517',desc:'Telefones e smartphones',seg:'Eletronicos/Eletrodom.',anexo:'XXII',status:'VERIFICAR',vig:'2026',obs:'Parte excluida SRE 19/2026'},
+  {ncm:'8539',desc:'Lampadas e tubos eletricos',seg:'Lampadas',anexo:'XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Excluido SRE 64/2025 e SRE 82/2025'},
+  {ncm:'8703',desc:'Automoveis de passageiros',seg:'Veiculos',anexo:'V',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'8704',desc:'Veiculos para transporte de mercadorias',seg:'Veiculos',anexo:'V',status:'COM ST',vig:'--',obs:'ST mantida'},
+  {ncm:'8711',desc:'Motocicletas',seg:'Veiculos 2/3 rodas',anexo:'VI',status:'COM ST',vig:'--',obs:'ST mantida'},
+];
+
+let GERAL = [
+  {seg:'Fumo e sucedaneos manufaturados',anexo:'Anexo I',status:'COM ST',vig:'--',obs:'ST mantida integralmente',base:'Art. 289 RICMS/SP'},
+  {seg:'Cimento',anexo:'Anexo II',status:'COM ST',vig:'--',obs:'ST mantida integralmente',base:'Art. 291 RICMS/SP'},
+  {seg:'Refrigerantes, cervejas e chope',anexo:'Anexo III',status:'COM ST',vig:'--',obs:'Cerveja, chope e refrigerantes permanecem',base:'Art. 293 RICMS/SP'},
+  {seg:'Sorvetes e preparados',anexo:'Anexo IV',status:'FORA DA ST',vig:'01/07/2026',obs:'Exclusao total – SRE 09/2026',base:'Port. SRE 09/26'},
+  {seg:'Veiculos automotores',anexo:'Anexo V',status:'COM ST',vig:'--',obs:'ST mantida',base:'Art. 299 RICMS/SP'},
+  {seg:'Veiculos duas e tres rodas',anexo:'Anexo VI',status:'COM ST',vig:'--',obs:'Inclui veiculos eletricos desde 01/12/2025',base:'Art. 301; SRE 85/25'},
+  {seg:'Pneumaticos, camaras de ar e protetores',anexo:'Anexo VII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Tintas e vernizes',anexo:'Anexo VIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Medicamentos e farmacos',anexo:'Anexo IX',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
+  {seg:'Bebidas alcoolicas (exceto cerveja/chope)',anexo:'Anexo X',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
+  {seg:'Perfumaria, higiene pessoal e dermocos.',anexo:'Anexo XI',status:'FORA DA ST',vig:'01/04/2026',obs:'Exclusao total – SRE 94/2025',base:'Port. SRE 94/25'},
+  {seg:'Bebidas nao alcoolicas e frias (PMPF)',anexo:'Anexos XIII/XIX',status:'COM ST',vig:'--',obs:'PMPF atualizados pela SRE 89/25',base:'Port. SRE 89/25'},
+  {seg:'Autopecas (exceto vidros automotivos)',anexo:'Anexo XIV',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Lampadas, reatores e starters',anexo:'Anexo XV',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 82/2025 e SRE 64/2025',base:'Port. SRE 82 e 64/25'},
+  {seg:'Produtos alimenticios (remanescentes)',anexo:'Anexo XVI',status:'COM ST',vig:'--',obs:'Massas, biscoitos, chocolates permanecem; cafe, acucar, oleos excluidos',base:'Art. 313-W; SRE 64/25'},
+  {seg:'Materiais de construcao e congeneres',anexo:'Anexo XVII',status:'COM ST',vig:'--',obs:'Novos MVA 2026-2028; exclusoes pontuais SRE 5 e 19/2026',base:'Art. 313-Z; SRE 88/25'},
+  {seg:'Ferramentas',anexo:'Anexo XVIII',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Artefatos de uso domestico',anexo:'Anexo XX',status:'FORA DA ST',vig:'01/01/2026',obs:'Exclusao total – SRE 64/2025',base:'Port. SRE 64/25'},
+  {seg:'Papelaria e artigos de papelaria',anexo:'Anexo XXI',status:'SAIRA DA ST',vig:'01/10/2026',obs:'Exclusao total materiais eletricos – SRE 34/2026',base:'Port. SRE 34/2026'},
+  {seg:'Eletronicos, eletroeletronicos e eletrodom.',anexo:'Anexo XXII',status:'VERIFICAR',vig:'2026',obs:'Exclusoes pontuais SRE 19/2026 e SRE 34/2026; checar cada item',base:'Port. SRE 19 e 34/2026'},
+];
+
+// ══════════════════════════════════════════════════════════════════════
+// Tentar carregar dados do Google Sheets (se público)
+// ══════════════════════════════════════════════════════════════════════
+async function tentarCarregarSheet() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=BASE`;
+    const resp = await fetch(url);
+    if (!resp.ok) return false;
+    const text = await resp.text();
+    const json = JSON.parse(text.substring(47).slice(0,-2));
+    const rows = json.table.rows;
+    if (!rows || rows.length < 2) return false;
+
+    const novos = [];
+    for (const row of rows) {
+      const c = row.c;
+      if (!c || !c[0] || !c[0].v) continue;
+      novos.push({
+        ncm: String(c[0].v||'').trim(),
+        desc: String(c[1]?.v||'').trim(),
+        seg:  String(c[2]?.v||'').trim(),
+        anexo:String(c[3]?.v||'').trim(),
+        status:String(c[4]?.v||'').trim(),
+        vig:  String(c[5]?.v||'').trim(),
+        obs:  String(c[6]?.v||'').trim(),
+      });
+    }
+    if (novos.length > 0) {
+      BASE = novos;
+      document.getElementById('updateInfo').textContent = 'Atualizado do Sheets agora';
+      popularSegmentos();
+      calcularStats();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════════════════════════════
+function login() {
+  const v = document.getElementById('senhaInput').value;
+  if (v === SENHA) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    inicializar();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    document.getElementById('senhaInput').value = '';
+    document.getElementById('senhaInput').focus();
+  }
+}
+
+function sair() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('senhaInput').value = '';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// INICIALIZAÇÃO
+// ══════════════════════════════════════════════════════════════════════
+function inicializar() {
+  document.getElementById('updateInfo').textContent = 'Base local · Jul/2026';
+  popularSegmentos();
+  renderGeral('');
+  calcularStats();
+  tentarCarregarSheet().then(ok => {
+    if (!ok) {
+      document.getElementById('updateInfo').textContent = 'Base local · Jul/2026';
+    }
+  });
+}
+
+function popularSegmentos() {
+  const segs = [...new Set(BASE.map(r => r.seg))].sort();
+  const sel = document.getElementById('filtroSeg');
+  sel.innerHTML = '<option value="">Todos</option>';
+  segs.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════════════════════════════════════
+function showPage(nome, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + nome).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// BUSCA
+// ══════════════════════════════════════════════════════════════════════
+let debounceTimer;
+function buscarLive() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(buscar, 200);
+}
+
+function buscar() {
+  const termo  = document.getElementById('termoBusca').value.toLowerCase().trim();
+  const status = document.getElementById('filtroStatus').value;
+  const seg    = document.getElementById('filtroSeg').value;
+
+  if (!termo && !status && !seg) {
+    document.getElementById('resultArea').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">🔎</div>
+        <strong>Pronto para buscar</strong>
+        <p>Digite um NCM (ex: 3004) ou nome do produto acima</p>
+      </div>`;
+    document.getElementById('resultsCount').textContent = '';
+    return;
+  }
+
+  const res = BASE.filter(r => {
+    if (termo && !r.ncm.includes(termo) && !r.desc.toLowerCase().includes(termo)) return false;
+    if (status && !r.status.includes(status)) return false;
+    if (seg && r.seg !== seg) return false;
+    return true;
+  });
+
+  document.getElementById('resultsCount').innerHTML =
+    `<strong>${res.length}</strong> resultado${res.length !== 1 ? 's' : ''} encontrado${res.length !== 1 ? 's' : ''}`;
+
+  if (res.length === 0) {
+    document.getElementById('resultArea').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">😕</div>
+        <strong>Nenhum resultado</strong>
+        <p>Tente outro NCM, descrição ou filtro diferente</p>
+      </div>`;
+    return;
+  }
+
+  const rows = res.map(r => `
+    <tr>
+      <td class="ncm-col">${esc(r.ncm)}</td>
+      <td class="desc-col">${esc(r.desc)}</td>
+      <td>${esc(r.seg)}</td>
+      <td style="text-align:center;font-size:12px;color:var(--text2)">${esc(r.anexo)}</td>
+      <td>${badge(r.status)}</td>
+      <td style="font-size:12px;color:var(--text2);white-space:nowrap">${esc(r.vig)}</td>
+      <td class="obs-col">${esc(r.obs)}</td>
+    </tr>`).join('');
+
+  document.getElementById('resultArea').innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>NCM</th><th>Descrição</th><th>Segmento</th>
+            <th>Anexo</th><th>Status ST</th><th>Vigência</th><th>Observações</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function limpar() {
+  document.getElementById('termoBusca').value = '';
+  document.getElementById('filtroStatus').value = '';
+  document.getElementById('filtroSeg').value = '';
+  buscar();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// VISÃO GERAL
+// ══════════════════════════════════════════════════════════════════════
+function filtrarGeral(filtro, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderGeral(filtro);
+}
+
+function renderGeral(filtro) {
+  const dados = filtro
+    ? GERAL.filter(r => r.status.toUpperCase().includes(filtro.toUpperCase()))
+    : GERAL;
+
+  if (!dados.length) {
+    document.getElementById('geralArea').innerHTML =
+      '<div class="empty-state"><strong>Nenhum segmento encontrado</strong></div>';
+    return;
+  }
+
+  const cards = dados.map(r => `
+    <div class="seg-card">
+      <div class="seg-card-top">
+        <div>
+          <div class="seg-nome">${esc(r.seg)}</div>
+          <div class="seg-meta">${esc(r.anexo)}${r.vig && r.vig !== '--' ? ' · ' + esc(r.vig) : ''}</div>
+        </div>
+        ${badge(r.status)}
+      </div>
+      ${r.obs ? `<div class="seg-obs">${esc(r.obs)}</div>` : ''}
+    </div>`).join('');
+
+  document.getElementById('geralArea').innerHTML =
+    `<div class="seg-grid">${cards}</div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PAINEL INTERNO — STATS
+// ══════════════════════════════════════════════════════════════════════
+function calcularStats() {
+  document.getElementById('sTotal').textContent   = BASE.length;
+  document.getElementById('sComST').textContent   = BASE.filter(r => r.status === 'COM ST').length;
+  document.getElementById('sForaST').textContent  = BASE.filter(r => r.status === 'FORA DA ST').length;
+  document.getElementById('sSairao').textContent  = BASE.filter(r => r.status === 'SAIRA DA ST' && r.vig === '01/10/2026').length;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function badge(status) {
+  const s = String(status).toUpperCase();
+  if (s === 'COM ST')       return '<span class="badge badge-green">✅ Com ST</span>';
+  if (s === 'FORA DA ST')   return '<span class="badge badge-red">❌ Fora da ST</span>';
+  if (s === 'SAIRA DA ST')  return '<span class="badge badge-yellow">⚠️ Sairá</span>';
+  if (s === 'VERIFICAR')    return '<span class="badge badge-blue">⚠️ Verificar</span>';
+  return `<span class="badge badge-gray">${esc(status)}</span>`;
+}
+</script>
+</body>
+</html>
