@@ -499,7 +499,7 @@ td.obs-col{color:var(--text2);font-size:12px;max-width:200px}
 // CONFIG — altere a senha aqui
 // ══════════════════════════════════════════════════════════════════════
 const SENHA = 'stsp2026';
-const SHEET_ID = '1Fh4o2VGSq0jbB7qoPKIgl0Xf3vhH8Rc2dJPtIJKDpoM';
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3gIaP6aP-VtmPdG4NnQaA-P0fAyaxei0Gt7kJDxAKq2puA6eoB5w3H3kKVf2DfkfPOJh3pr6H1tqV/pub?gid=327386108&single=true&output=csv';
 
 // ══════════════════════════════════════════════════════════════════════
 // Base de dados embutida (sincronizada com a planilha)
@@ -619,37 +619,53 @@ let GERAL = [
 // ══════════════════════════════════════════════════════════════════════
 async function tentarCarregarSheet() {
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=BASE`;
-    const resp = await fetch(url);
+    const resp = await fetch(SHEET_CSV);
     if (!resp.ok) return false;
     const text = await resp.text();
-    const json = JSON.parse(text.substring(47).slice(0,-2));
-    const rows = json.table.rows;
-    if (!rows || rows.length < 2) return false;
+    const linhas = text.trim().split('\n');
+    if (linhas.length < 2) return false;
 
+    // Primeira linha é cabeçalho: NCM,DESCRICAO,SEGMENTO,ANEXO,STATUS,VIGENCIA,OBS
     const novos = [];
-    for (const row of rows) {
-      const c = row.c;
-      if (!c || !c[0] || !c[0].v) continue;
+    for (let i = 1; i < linhas.length; i++) {
+      const cols = parseCSVLine(linhas[i]);
+      if (!cols[0] || !cols[0].trim()) continue;
       novos.push({
-        ncm: String(c[0].v||'').trim(),
-        desc: String(c[1]?.v||'').trim(),
-        seg:  String(c[2]?.v||'').trim(),
-        anexo:String(c[3]?.v||'').trim(),
-        status:String(c[4]?.v||'').trim(),
-        vig:  String(c[5]?.v||'').trim(),
-        obs:  String(c[6]?.v||'').trim(),
+        ncm:    cols[0]?.trim() || '',
+        desc:   cols[1]?.trim() || '',
+        seg:    cols[2]?.trim() || '',
+        anexo:  cols[3]?.trim() || '',
+        status: cols[4]?.trim() || '',
+        vig:    cols[5]?.trim() || '',
+        obs:    cols[6]?.trim() || '',
       });
     }
-    if (novos.length > 0) {
+    if (novos.length > 5) {
       BASE = novos;
-      document.getElementById('updateInfo').textContent = 'Atualizado do Sheets agora';
+      const agora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+      document.getElementById('updateInfo').textContent = 'Planilha sincronizada às ' + agora;
       popularSegmentos();
       calcularStats();
       return true;
     }
-  } catch(e) {}
+  } catch(e) {
+    console.warn('Sheets:', e.message);
+  }
   return false;
+}
+
+function parseCSVLine(line) {
+  const cols = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"' && !inQ) { inQ = true; continue; }
+    if (ch === '"' && inQ) { inQ = false; continue; }
+    if (ch === ',' && !inQ) { cols.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  cols.push(cur);
+  return cols;
 }
 
 // ══════════════════════════════════════════════════════════════════════
